@@ -19,7 +19,7 @@ for (var i = 1; i <= j; i++) {
 function pullData(fileName) {
     request("https://parsons.nyc/aa/m" + fileName + ".html", function(error, response, body){
         if (!error && response.statusCode == 200) {
-            fs.writeFileSync("/Users/colleenmccaffrey/Documents/Data Structures/data-structures/class1/data/text" + fileName + ".txt", body);
+            fs.writeFileSync("/Users/colleenmccaffrey/Documents/Data Structures/data-structures/assignment1/data/text" + fileName + ".txt", body);
         }
         else {console.log("Request failed!")}
     });
