@@ -1,27 +1,64 @@
 // npm install cheerio
-
 var fs = require('fs');
 var cheerio = require('cheerio');
-var arr = [];
 var content = fs.readFileSync('data/text10.txt');
 // load `content` into a cheerio object
 var $ = cheerio.load(content);
 //console.log($('div >table > tbody > tr > td:nth-child(1)').children().first().contents().text());
-var records = $('div > table > tbody > tr > td:nth-child(1)').contents().not($('div >table > tbody > tr > td:nth-child(1)').children()).map(function () {
+var addresses = $('div > table > tbody > tr > td:nth-child(1)').contents().not($('div >table > tbody > tr > td:nth-child(1)').children()).map(function () {
     return $(this).text().trim().replace(/\s+/g," ");
   }).get();
 
-createAarray(records);
+    //console.log(addresses);
+    createAarray(addresses);
+
 
 function createAarray(recs) {
-    recs = recs.filter(Boolean).join('\n');
-    console.log(recs)
-   createFile(recs);
+   // var recsCity = [];
+    var cleanRecs = [];
+    for (var i = 0; i < recs.length; i++) {
+        var item = recs[i];
+        //console.log('test' + test.slice(-1));
+        if (item.slice(-1) === ','){
+            recs[i] = recs[i].split(',')[0];
+           cleanRecs.push(recs[i].slice(0, item.length -1));
+        }
+    }
+    recs = recs.filter(Boolean);
+    
+
+    //console.log(recs)
+    //createObject(recs);
+    createFile(cleanRecs);
+}
+
+function createFile(meetings) {  
+    var array = []; 
+    var Record = {
+        init: function (id, address) {
+            this.id = id;
+            this.address = address;
+        },
+        describe: function () {
+            var description = this.id + " (" + this.location + ")";
+            return description;
+        }
+    };
+  
+    meetings.forEach(function (meeting, index) {
+        var records = Object.create(Record);
+        records.init(index, meeting);
+        array.push(records);
+    });
+  
+    fs.writeFileSync('data/m10-addresses.json', JSON.stringify(array));
 }
 
 
-//var addies = records.replace(/(\r\n|\n|\r)/g, '').replace(/\s+/g,' ');
-function createFile(array) {   
-    fs.writeFileSync('data/m10-addresses.json', array);
-    console.log("created");
-}
+//solution option to create json object using asyn
+// https://stackoverflow.com/questions/38390168/write-array-object-to-json-in-node-js
+//solution using object.create js methods
+// https://openclassrooms.com/en/courses/3523231-learn-to-code-with-javascript/3703666-store-data-in-arrays
+//initialize object var results = obejcet create init
+//dont write array, first iterate through array and pursh each item into object
+//then write object (using JSON stringify) into json file
