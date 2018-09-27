@@ -16,6 +16,7 @@ var addresses = $('div > table > tbody > tr > td:nth-child(1)').contents().not($
 function createAarray(recs) {
    // var recsCity = [];
     var cleanRecs = [];
+    recs = recs.filter(Boolean);
     for (var i = 0; i < recs.length; i++) {
         var item = recs[i];
         //console.log('test' + test.slice(-1));
@@ -24,7 +25,6 @@ function createAarray(recs) {
            cleanRecs.push(recs[i].slice(0, item.length -1));
         }
     }
-    recs = recs.filter(Boolean);
     
 
     //console.log(recs)
@@ -38,10 +38,6 @@ function createFile(meetings) {
         init: function (id, address) {
             this.id = id;
             this.address = address;
-        },
-        describe: function () {
-            var description = this.id + " (" + this.location + ")";
-            return description;
         }
     };
   
