@@ -49,12 +49,3 @@ function createFile(meetings) {
   
     fs.writeFileSync('data/m10-addresses.json', JSON.stringify(array));
 }
-
-
-//solution option to create json object using asyn
-// https://stackoverflow.com/questions/38390168/write-array-object-to-json-in-node-js
-//solution using object.create js methods
-// https://openclassrooms.com/en/courses/3523231-learn-to-code-with-javascript/3703666-store-data-in-arrays
-//initialize object var results = obejcet create init
-//dont write array, first iterate through array and pursh each item into object
-//then write object (using JSON stringify) into json file
