@@ -82,3 +82,22 @@ function createFile(meetings) {
     fs.writeFileSync('data/m10-addresses.json', JSON.stringify(array));
     });   
 }
+
+//for misspelled records try using callback with soundex or substring 
+//https://geoservices.tamu.edu/Services/Geocode/About/
+//add city/state/zip?
+//push a display location key value into aarray for front end rendering
+//**************************************** */
+//assignment 4
+//how will you structure adn store data > pk, fk, etc
+//how many tables, how do they relate to each other?
+//inlcude all data from html > or be prepared to answer to why not
+//address > street address; address2 > additional display information
+//clean data without longlat
+//some groups meet in more than one place adn some places host more than one meeting type 
+//whats pk unique value?
+//what informarion is relevant to database and what infomration is useful for display and can just be generci (proposition vs predicate)
+//look at documentation for pg node
+//enpoint: 
+//aa-db.cad780eu8lhp.us-east-1.rds.amazonaws.com
+//port 5432
