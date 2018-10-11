@@ -24,7 +24,8 @@ function populate(addressesForDb) {
     async.eachSeries(addressesForDb, function(value, callback) {
         const client = new Client(db_credentials);
         client.connect();
-
+        //MOVE DATA INSERTION INTO OWN JS FILE > OR KEEP IN CREATE, DONT ADD TO SLEECT OR IT WILL REPOPULATE TABLE WITH REDUNDANT DATA
+        //E' > ESCAPES COMMAS WITHIN DATA VALUES SO IT DOESN'T PREMATURELY TRY TO SKIP ITEMS
         var thisQuery = "INSERT INTO aalocations VALUES (E'" + value.address + "', " + value.latLong.latitude + ", " + value.latLong.longitude + ");";
         //var thisQuery = "SELECT * FROM aalocations;";
         client.query(thisQuery, (err, res) => {
