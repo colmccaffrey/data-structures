@@ -52,15 +52,15 @@ console.log(diaryEntries);
 populate();
 
 function populate() { 
-    diaryEntries.push(new DiaryEntry(getIndex(), 'October 9, 2018', 65, "light breeze and clouds", true, "moderate", true, "walking", "60 minutes", "relaxed" ));
-    diaryEntries.push(new DiaryEntry(getIndex(), 'October 9, 2018', 85, 'light breeze and clouds', false, "none", true ));
-    diaryEntries.push(new DiaryEntry(getIndex(), 'October 9, 2018', 78, 'light breeze and clouds', true, "low", false, "run", "45 minutes", "very tired and thirsty" ));
+    diaryEntries.push(new DiaryEntry(getId(), "October 9, 2018", 65, "light breeze and clouds", true, "moderate", true, "walking", "60 minutes", "relaxed" ));
+    diaryEntries.push(new DiaryEntry(getId(), "October 10, 2018", 85, "hot and humid", false, "none", true ));
+    diaryEntries.push(new DiaryEntry(getId(), "October 11, 2018", 78, "rainy and cool", true, "low", false, "run", "45 minutes", "very tired and thirsty" ));
    
    console.log(diaryEntries);
 }
 buildDiary();
 
-function getIndex(){
+function getId(){
     var index = Math.floor(100000 + Math.random() * 900000);
     return index;
 }
