@@ -13,11 +13,11 @@ var dynamodb = new AWS.DynamoDB();
    
 
 class DiaryEntry {
-   constructor(primaryKey, date, temperature, condition, exercise, motivation, sleep, type, duration, feel_after) {
-    this.id = {};
-    this.id.N = primaryKey.toString();
-    this.date = {}; 
-    this.date.S = new Date(date).toDateString();
+   constructor(date, temperature, condition, exercise, motivation, sleep, type, duration, feel_after) {
+   // this.id = {};
+    //this.id.N = primaryKey.toString();
+    this.pk = {}; 
+    this.pk.S = new Date(date).toDateString();
     this.weather = {};
     this.weather.M = {};
         this.weather.M.temperature = {};
@@ -52,25 +52,20 @@ console.log(diaryEntries);
 populate();
 
 function populate() { 
-    diaryEntries.push(new DiaryEntry(getId(), "October 9, 2018", 65, "light breeze and clouds", true, "moderate", true, "walking", "60 minutes", "relaxed" ));
-    diaryEntries.push(new DiaryEntry(getId(), "October 10, 2018", 85, "hot and humid", false, "none", true ));
-    diaryEntries.push(new DiaryEntry(getId(), "October 11, 2018", 78, "rainy and cool", true, "low", false, "run", "45 minutes", "very tired and thirsty" ));
+    diaryEntries.push(new DiaryEntry("October 9, 2018", 65, "light breeze and clouds", true, "moderate", true, "walking", "60 minutes", "relaxed" ));
+    diaryEntries.push(new DiaryEntry("October 10, 2018", 85, "hot and humid", false, "none", true ));
+    diaryEntries.push(new DiaryEntry("October 11, 2018", 78, "rainy and cool", true, "low", false, "run", "45 minutes", "very tired and thirsty" ));
    
    console.log(diaryEntries);
 }
 buildDiary();
-
-function getId(){
-    var index = Math.floor(100000 + Math.random() * 900000);
-    return index;
-}
 
 function buildDiary(){
     var params = {};
     diaryEntries.forEach(function(entry) {
         setTimeout(function(){
             params.Item = entry; 
-            params.TableName = "dailynote";
+            params.TableName = "deardiary";
             dynamodb.putItem(params, function (err, data) {
                 if (err) console.log(err, err.stack); // an error occurred
                 else     console.log(data);           // successful response

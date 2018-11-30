@@ -67,7 +67,7 @@ function createFile(meetings) {
         console.log(meetingsData.length);
         var array = []; 
         const Record = {
-            init: function (id, address, latLong) {
+            init: function (address, latLong) {
                 this.id = id;
                 this.address = address;
                 this.latLong = latLong;

@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<body>
+    <span id="pressure"></span><br>
+    <span id="tstamp"></span>
+
+    <br><br>
+    <button onclick="start()">Connect</button>
+ 
+    <script type="text/javascript">
+    function start() {
+
+        document.getElementById("pressure").innerHTML = "Waiting for data...";
+        var deviceID = "520036000751373238323937";
+        var accessToken = "2f9e4c0fcb1463093ca5e3695639466200a9b802";
+        var eventSource = new EventSource("https://api.particle.io/v1/devices/" + deviceID + "/events?access_token=" + accessToken);
+
+        eventSource.addEventListener('open', function(e) {
+            console.log("Opened!"); },false);
+         
+        eventSource.addEventListener('error', function(e) {
+            console.log("Errored!"); },false);
+         
+        eventSource.addEventListener('read_sensor', function(e) {
+            var rawData = JSON.parse(e.data);
+            console.log(rawData);
+            var parsedData = JSON.parse(rawData.data);
+            var tempSpan = document.getElementById("pressure");
+            var tsSpan   = document.getElementById("tstamp");
+            tempSpan.innerHTML = "sensor_reading: " + parsedData.pressure + "</br>" + " time: " + rawData.published_at;
+            tempSpan.style.fontSize = "28px";
+            tsSpan.innerHTML = "At timestamp " + rawData.published_at;
+            tsSpan.style.fontSize = "9px";
+            
+        }, false);
+    }
+    </script>
+</body>
+</html>

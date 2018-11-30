@@ -6,19 +6,17 @@ var fs = require('fs');
 
 // AWS RDS POSTGRESQL INSTANCE
 var db_credentials = new Object();
-db_credentials.user = 'adminc';
-db_credentials.host = 'colmacdb.cad780eu8lhp.us-east-1.rds.amazonaws.com';
-db_credentials.database = 'aa_newdb';
+db_credentials.user = 'colmac';
+db_credentials.host = process.env.AWSRDS_EP;
+db_credentials.database = 'datastructuresdb';
 db_credentials.password = process.env.AWS_PW;
 db_credentials.port = 5432;
 
-
 //var addressesForDb = [ { address: '63 Fifth Ave, New York, NY', latLong: { lat: 40.7353041, lng: -73.99413539999999 } }, { address: '16 E 16th St, New York, NY', latLong: { lat: 40.736765, lng: -73.9919024 } }, { address: '2 W 13th St, New York, NY', latLong: { lat: 40.7353297, lng: -73.99447889999999 } } ];
-var content = fs.readFileSync('../assignment3/data/m10-addresses.json');
+var content = fs.readFileSync('../assignment2/data/m10-addresses.json');
 var contentFordb = JSON.parse(content);
 console.log(contentFordb);
 populate(contentFordb);
-
 
 function populate(addressesForDb) {
     async.eachSeries(addressesForDb, function(value, callback) {
@@ -26,7 +24,12 @@ function populate(addressesForDb) {
         client.connect();
         //MOVE DATA INSERTION INTO OWN JS FILE > OR KEEP IN CREATE, DONT ADD TO SLEECT OR IT WILL REPOPULATE TABLE WITH REDUNDANT DATA
         //E' > ESCAPES COMMAS WITHIN DATA VALUES SO IT DOESN'T PREMATURELY TRY TO SKIP ITEMS
-        var thisQuery = "INSERT INTO aalocations VALUES (E'" + value.address + "', " + value.latLong.latitude + ", " + value.latLong.longitude + ");";
+        //address only, including long/lat
+        //var thisQuery = "INSERT INTO aalocations VALUES (E'" + value.address + "', " + value.latLong.latitude + ", " + value.latLong.longitude + ");";
+        //create full records
+       // var thisQuery = `INSERT INTO aalocations VALUES (E'` +  value.address + `, ` + value.add2 + `, ` +  value.location + `, ` + value.name + `, ` + value.details + `', ` + value.access + `);`;
+       var thisQuery = "INSERT INTO aalocations VALUES (E'" + value.address + "', '" + value.add2 + "', '" + value.location+ "', '" + value.name + "', E'" + value.details + "', E'" + value.access + "');";
+
         //var thisQuery = "SELECT * FROM aalocations;";
         client.query(thisQuery, (err, res) => {
             console.log(err, res);
