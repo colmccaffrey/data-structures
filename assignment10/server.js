@@ -23,11 +23,14 @@ app.get('/sensor', function(req, res) {
     
     // Connect to the AWS RDS Postgres database
     const client = new Pool(db_credentials);
+    var d = new Date();
+    var today = parseInt(d.getDate());
 
     // SQL query 
     var q = `SELECT EXTRACT(DAY FROM sensorTime) as sensorday,
-             AVG(sensorValue::int) as num_obs
+             COUNT(sensorValue::int) as ounces
              FROM sensorData
+             WHERE sensorValue >= 4
              GROUP BY sensorday
              ORDER BY sensorday;`;
     
@@ -39,6 +42,8 @@ app.get('/sensor', function(req, res) {
             res.send(qres.rows);
             client.end();
             console.log('1) responded to request for sensor data');
+            console.log(d.getDate());
+
         }
     });
 });
