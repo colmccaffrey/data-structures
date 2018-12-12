@@ -10,6 +10,7 @@ var newmtgtime = [];
 var newCleanTimes = [];
 var daysTimesMeets = [];
 var specialInt;
+var meetingList = [];
 //var content = fs.readFileSync('../assignment1/data/text01.txt');
 
 // load `content` into a cheerio object
@@ -118,22 +119,21 @@ $('div > table > tbody > tr > td:nth-child(2)').each(function(i, elem) {
             // allMeetings.push(thisMeeting)
              //console.log(allMeetings);
             }
-             createAllMeetings =  {
-                meetings: allMeetings
-            }
-
         }
-            
-        console.log(createAllMeetings.meetings);
+        createAllMeetings =  {
+            meetings: allMeetings
+        }
+        // console.log(createAllMeetings);
+        meetingList.push(createAllMeetings);
 
        }   //createAllMeetings.push({allMeetings})
     //    console.log(createAllMeetings.meetings);
 
     }
+        console.log(meetingList);
 
     // createAllMeetings = {
     //     meetings: allMeetings
-
 
 
 //         meetingInfo.forEach(function (dateTime, index){
@@ -244,18 +244,17 @@ $('div > table > tbody > tr > td:nth-child(2)').each(function(i, elem) {
     */
 
     
-createAarray(addresses, locations, names, detailsbox, accessible, meetingDt);
+createAarray(addresses, locations, names, detailsbox, accessible, meetingList);
 
-function createAarray(recs, locs, meetingNames, deets, access, meetDay) {
+function createAarray(recs, locs, meetingNames, deets, access, meetList) {
    // var recsCity = [];
-
+    
     var cleanRecs = [];
     var deetRecs = [];
     var buildings = [];
     var mtgNames = [];
     var mtgDetails = [];
     var haccess = [];
-    var daywk = [];
     recs = recs.filter(Boolean);
     //console.log(locs.length);
     //console.log(recs.length);
@@ -298,19 +297,19 @@ function createAarray(recs, locs, meetingNames, deets, access, meetDay) {
             access.splice(j, 1);
         }
         haccess.push(access[i]);
-        daywk.push(meetDay[i]);
+        //daywk.push(meetDay[i]);
         //console.log(daywk);
     }
 
     //console.log(haccess)
     //createObject(recs);
-    createFile(cleanRecs, deetRecs, buildings, mtgNames, mtgDetails, haccess);
+    createFile(cleanRecs, deetRecs, buildings, mtgNames, mtgDetails, haccess, meetList);
 }
 
-function createFile(meetings, add2, location, name, details, access) {  
+function createFile(meetings, add2, location, name, details, access, info) {  
     var array = []; 
     var Record = {
-        init: function (address, add2, location, name, details, access) {
+        init: function (address, add2, location, name, details, access, info) {
             //this.id = id;
             this.address = address;
             this.add2 = add2;
@@ -318,12 +317,13 @@ function createFile(meetings, add2, location, name, details, access) {
             this.name = name;
             this.details = details;
             this.access = access;
+            this.info = info.meetings;
         }
     };
   
     meetings.forEach(function (meeting, index) {
                 var records = Object.create(Record);
-                records.init(meeting, add2[index], location[index], name[index], details[index], access[index]);
+                records.init(meeting, add2[index], location[index], name[index], details[index], access[index], info[index]);
                 array.push(records);
     });
   
