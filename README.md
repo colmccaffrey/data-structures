@@ -11,7 +11,7 @@
 * [assignment 9](https://github.com/colmccaffrey/data-structures/tree/master/assignment9)
 * [assignment 10](https://github.com/colmccaffrey/data-structures/tree/master/assignment10)
 * [assignment 11](https://github.com/colmccaffrey/data-structures/tree/master/assignment11)
-* [Final Assignments] (http://18.207.111.248:8080/)
+* [Final Assignments](http://18.207.111.248:8080)
 
 
 
