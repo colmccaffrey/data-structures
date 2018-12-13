@@ -1,7 +1,26 @@
+//set key from .env
+require('dotenv').config();
+var apiKey = process.env.KEY;
+var async = require('async');
+var request = require('request'); 
+
+
+
 // npm install cheerio
 var fs = require('fs');
 var cheerio = require('cheerio');
-var content = fs.readFileSync('data/text10.txt');
+
+
+for (var fileNum = 1; fileNum <= 10; fileNum++){
+    getZoneData(fileNum);
+}
+
+function getZoneData(num) {
+if (num >= 10) {
+    var content = fs.readFileSync('../assignment1/data/text' + num +  '.txt');
+    } else {
+    var content = fs.readFileSync('../assignment1/data/text' + '0' + num +  '.txt');
+}
 var meetingTimes = [];
 var startTimes = [];
 var meetingDt = [];
@@ -130,118 +149,7 @@ $('div > table > tbody > tr > td:nth-child(2)').each(function(i, elem) {
     //    console.log(createAllMeetings.meetings);
 
     }
-        console.log(meetingList);
-
-    // createAllMeetings = {
-    //     meetings: allMeetings
-
-
-//         meetingInfo.forEach(function (dateTime, index){
-//         //console.log("length" + dateTime.length);         
-//         var numMeetingTimes = Math.floor(dateTime.length/6);
-//         //console.log(numMeetingTimes);
-//         //var allMeetings = new Array();
-//         var j = 0;
-//         var s = 0;
-        
-//         for (var i = 0; i <= numMeetingTimes; i ++ ){
-//             //var thisMeeting = new Array();
-//             //var infoString = dateTime.join();
-
-//             //console.log(infoString);
-
-
-//            //console.log(dateTime);
-//                 thisMeeting.push({
-//                     meetings: {
-//                         //day: dateTime.split('From')[0],
-//                         //startHour: dateTime.split(':')[0]
-
-//                     } 
-//                 })
-            
-//                 // thisMeeting = { 
-//                 //     day: dateTime[0 + s + j].split(' ')[0],
-//                 //     startHour:  dateTime[1 + s + j].split(':')[0],
-//                 //     startMin: dateTime[1 + s + j].split(':')[1].split(' ')[0],
-//                 //     amPM:   dateTime[1 + s + j].split(' ')[1],
-//                 //     type:   dateTime[5 + s + j],
-//                 //     specialInterest:  + checkData(dateTime[6 + s + j], dateTime[7 + s + j])
-                
-//                 // }
-//                 //figure out how to set special interest if it doesnt exist and not fuck everything else up
-//                 if (dateTime[6 + s + j] === "Special Interest") {
-//                     s = s + 2;
-//                     j = j + 6;
-
-//                 } else {
-//                     s = s;
-//                     j = j + 6;
-//                 }
-                
-               
-//                 //console.log(thisMeeting);
-//             }
-//             // allMeetings.push({
-//             //     meetings:  thisMeeting
-//             // });
-//             daysTimesMeets.push(thisMeeting);
-
-//             //need to write a function to check for more than one meeting time for each meeting and push into same object for each m
-//          }) 
-
-//     }
-
-//     //console.log("meetings" + daysTimesMeets);
-
-
-// function checkData(info, special) {
-//    if (info === "Special Interest" ) {
-//         //console.log(info);
-//         return special;
-//     } else {
-//         //console.log("na");
-//         return "NA";
-//     }
-// }
-/*
-var dayOfWeek = $('div > table > tbody > tr > td:nth-child(2) > b').map(function () { .children()).map(function () {
-    return $(this).text().trim().replace(/\s+/g," ").replace(/'/g, '"');
-    return $(this).text().trim().replace(/\s+/g," ");
-  }).get();
-  
-    //console.log(meetingDt);
-
-//splits the information for meetings
-$('div > table > tbody > tr > td:nth-child(2)').each(function(i, elem) {
-    var beginTime = ($(elem).contents());
-    //if (beginTime.split(' ')[1] === "From")
-    //console.log("day" + theDate.split(' ')[0]);
-    //console.log(beginTime[i]);
-    meetingTimes.push(beginTime);
-    
-    })
-    //console.log(meetingTimes);
-    meetingTimes.forEach(function (index, daysTimes){
-        var meetingDeets = daysTimes;
-        //console.log(meetingDeets);
-    //var eachMeetingTime = beginTime.split('<br /> <br />');
-    //console.log(eachMeetingTime);
-   // eachMeetingTime.forEach(function (meetingTime, index) {
-        //console.log(meetingTime[0])
-        //if (meetingTime !== "") {
-            //var dayMeetingTime = meetingTime.split(',');
-            //console.log("meeting times " + dayMeetingTime[0]);
-           // }
-    //})
-})
-
-       // meetingDays.push(beginTime.split(',')[0]);
-
-    //startTimes.push(beginTime.split(' ')[1])
-
-     //console.log("meeting days " + dayOfMeeting);
-    */
+       // console.log(meetingList);
 
     
 createAarray(addresses, locations, names, detailsbox, accessible, meetingList);
@@ -300,18 +208,90 @@ function createAarray(recs, locs, meetingNames, deets, access, meetList) {
         //daywk.push(meetDay[i]);
         //console.log(daywk);
     }
-
-    //console.log(haccess)
-    //createObject(recs);
+    
     createFile(cleanRecs, deetRecs, buildings, mtgNames, mtgDetails, haccess, meetList);
+   
+    //console.log("geo " + geo.length);
+    //createFile(cleanRecs, deetRecs, buildings, mtgNames, mtgDetails, haccess, meetList);
 }
 
-function createFile(meetings, add2, location, name, details, access, info) {  
+
+function getGeoLocate(meetings) {
+    return new Promise(resolve => {
+        setTimeout(() => {
+     
+    var meetingsData = [];
+    var geoarray = []; 
+
+    function setLocation (latitude, longitude) {
+            return {
+                lat: latitude,
+                long: longitude
+            };
+        }
+        async.eachSeries(meetings, function(value, callback) {
+        var apiRequest = 'https://geoservices.tamu.edu/Services/Geocode/WebService/GeocoderWebServiceHttpNonParsed_V04_01.aspx?';
+        apiRequest += 'streetAddress=' + value.split(' ').join('%20');
+        apiRequest += '&city=New%20York&state=NY&apikey=' + apiKey;
+        apiRequest += '&format=json&version=4.01';
+
+        request(apiRequest, function(err, resp, body) {
+            if (err) {throw err;}
+            else {
+                var res = JSON.parse(body);
+            // console.log(res);
+                var lat = parseFloat(res['OutputGeocodes'][0].OutputGeocode.Latitude);
+                var long = parseFloat(res['OutputGeocodes'][0].OutputGeocode.Longitude);
+                console.log(lat);
+                console.log(long);
+                let meetingLocation = setLocation(lat, long);
+                meetingsData.push(meetingLocation);
+            }
+        });
+        setTimeout(callback, 2000);
+        }, function() {
+        // fs.writeFileSync('geo.json', JSON.stringify(meetingsData));
+        console.log('*** *** *** *** ***');
+        console.log('Number of meetings in this zone: ');
+        console.log(meetingsData.length);
+        const Georecord = {
+            //could init building id and address here if want separate tables for meeting info and location info
+            init: function (latLong) {
+                this.latLong = latLong;
+            }
+        };
+        meetings.forEach(function (meeting, index) {
+            var georecords = Object.create(Georecord);
+            georecords.init(meetingsData[index]);
+            geoarray.push(georecords);
+        });
+        
+        //fs.writeFileSync('data/geo-addresses-' + num + '.json', JSON.stringify(geoarray));
+        //console.log("geoarray" + geoarray);
+                //return geoarray;
+
+                resolve(geoarray);
+            }, 10000);
+         });
+         
+        })
+    }
+
+async function createFile(meetings, add2, location, name, details, access, info) {  
+    //console.log("geo length" + geo.length);
+    console.log('calling');
+
+    //const geo = getGeoLocate(meetings);
+    var geo = await getGeoLocate(meetings);
+    console.log(geo.length);
+
+
     var array = []; 
     var Record = {
-        init: function (address, add2, location, name, details, access, info) {
+        init: function (address, geo, add2, location, name, details, access, info) {
             //this.id = id;
             this.address = address;
+            this.geo = geo.latLong;
             this.add2 = add2;
             this.location = location;
             this.name = name;
@@ -323,9 +303,10 @@ function createFile(meetings, add2, location, name, details, access, info) {
   
     meetings.forEach(function (meeting, index) {
                 var records = Object.create(Record);
-                records.init(meeting, add2[index], location[index], name[index], details[index], access[index], info[index]);
+                records.init(meeting, geo[index], add2[index], location[index], name[index], details[index], access[index], info[index]);
                 array.push(records);
     });
-  
-    fs.writeFileSync('data/m10-addresses.json', JSON.stringify(array));
+    
+    fs.writeFileSync('data/m' + num + '-addresses.json', JSON.stringify(array));
+    }
 }

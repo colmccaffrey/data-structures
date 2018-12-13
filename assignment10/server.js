@@ -56,8 +56,12 @@ app.get('/aameetings', function(req, res) {
     const client = new Pool(db_credentials);
     
     // SQL query
-    
-    var thisQuery = `SELECT * FROM aalocations;`;
+    //var thisQuery = `SELECT long, lat FROM aalocations GROUP BY long, lat;`;
+
+    var thisQuery = `SELECT address, day, hour, min, type FROM aalocations WHERE lat = 40.7346341 and long = -73.9879773;`;
+    //var thisQuery = `SELECT address, day, hour, min, type FROM aalocations WHERE address = '49 Fulton Street';`;
+    //var thisQuery = `SELECT address, day, hour, min, type FROM aalocations WHERE type = 'B = Beginners meeting';`;
+    //var thisQuery = `SELECT * FROM aalocations;`;
     //var thisQuery = "SELECT mtgday, mtgtime, mtglocation, mtgaddress, mtgtypes FROM aadata WHERE mtgday = 'Monday' and mtghour >= 7;";
 
                  
@@ -77,10 +81,14 @@ app.get('/aameetings', function(req, res) {
 app.get('/deardiary', function(req, res) {
 
     // Connect to the AWS DynamoDB database
-    var dynamodb = new AWS.DynamoDB();
+    AWS.config = new AWS.Config();
+    //var dynamodb = new AWS.DynamoDB();
     AWS.config.accessKeyId = process.env.AWS_ID;
     AWS.config.secretAccessKey = process.env.AWS_KEY;
     AWS.config.region = "us-east-1";
+
+    var dynamodb = new AWS.DynamoDB();
+
     
     // DynamoDB (NoSQL) query
     var params = {

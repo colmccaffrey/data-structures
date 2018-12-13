@@ -79,7 +79,7 @@ function createFile(meetings) {
             records.init(index, meeting, meetingsData[index]);
             array.push(records);
         });
-    fs.writeFileSync('data/m10-addresses.json', JSON.stringify(array));
+    fs.writeFileSync('data/geo-addresses.json', JSON.stringify(array));
     });   
 }
 
