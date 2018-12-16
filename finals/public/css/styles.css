@@ -1,0 +1,31 @@
+body {
+    display: block;
+    margin: 0;
+}
+
+#mapid {
+    height: 100vh;
+    width: auto;
+}
+.my-label {
+    position: absolute;
+    width:auto;
+    padding: .01rem;
+    font-size:12px;
+}
+.details {
+    max-height: 100vh;
+    width: 20%;
+    padding-top: 2%;
+    padding-right: 2%;
+    padding-left: 1%;
+    padding-bottom: 1%;
+    background-color: white;
+    color: black;
+    font-size: .9rem;
+    z-index: 1000;
+    position: absolute;
+    top: 0;
+    right: 0; 
+    overflow: scroll;   
+}
