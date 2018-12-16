@@ -27,10 +27,12 @@ app.get('/sensor', function(req, res) {
 
     // SQL query 
     var q = `SELECT EXTRACT(DAY FROM sensorTime) as sensorday,
-             AVG(sensorValue::int) as num_obs
+             COUNT(sensorValue::int) as ounces
              FROM sensorData
+             WHERE sensorValue >= 4
              GROUP BY sensorday
              ORDER BY sensorday;`;
+    
 
     client.connect();
     client.query(q, (qerr, qres) => {
@@ -180,19 +182,21 @@ app.get('/ss', function(req, res) {
     
     // Connect to the AWS RDS Postgres database
     const client = new Pool(db_credentials);
+    var d = new Date();
+    var today = parseInt(d.getDate());
 
     // SQL query 
     var q = `SELECT EXTRACT(DAY FROM sensorTime) as sensorday,
-             AVG(sensorValue::int) as num_obs
+             COUNT(sensorValue::int) as ounces
              FROM sensorData
+             WHERE sensorValue >= 4
              GROUP BY sensorday
              ORDER BY sensorday;`;
-
-    client.connect();
+    
     client.query(q, (qerr, qres) => {
         if (qerr) { throw qerr }
         else {
-            var resp = s1x + JSON.stringify(qres.rows) + s2x; 
+            var resp = mx + JSON.stringify(qres.rows) + nx; 
             res.send(resp);
             client.end();
             console.log('1) responded to request for sensor graph');
@@ -227,40 +231,213 @@ app.get('/aameetings', function(req, res) {
 
 // respond to requests for /deardiary
 app.get('/deardiary', function(req, res) {
-    
-    // AWS DynamoDB credentials
+
+    // Connect to the AWS DynamoDB database
     AWS.config = new AWS.Config();
+    //var dynamodb = new AWS.DynamoDB();
     AWS.config.accessKeyId = process.env.AWS_ID;
     AWS.config.secretAccessKey = process.env.AWS_KEY;
     AWS.config.region = "us-east-1";
 
-    // Connect to the AWS DynamoDB database
     var dynamodb = new AWS.DynamoDB();
+
     
     // DynamoDB (NoSQL) query
     var params = {
-        TableName: "aarondiary",
-        KeyConditionExpression: "#tp = :topicName", // the query expression
+        TableName: "deardiary",
+        KeyConditionExpression: "#dt = :entryDate", // the query expression
         ExpressionAttributeNames: { // name substitution, used for reserved words in DynamoDB
-            "#tp": "topic"
+            "#dt": "pk"
         },
         ExpressionAttributeValues: { // the query values
-            ":topicName": { S: "cats" }
+            ":entryDate": {S: "Thu Oct 11 2018"}
         }
     };
 
+    
     dynamodb.query(params, function(err, data) {
         if (err) {
             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
         }
         else {
             res.send(data.Items);
-            console.log('3) responded to request for dear diary data');
+            console.log(data.Items[0].pk.S);
         }
     });
 });
 
-// create templates
+// // respond to requests for /deardiary
+// app.get('/deardiary', function(req, res) {
+    
+//     // AWS DynamoDB credentials
+//     AWS.config = new AWS.Config();
+//     AWS.config.accessKeyId = process.env.AWS_ID;
+//     AWS.config.secretAccessKey = process.env.AWS_KEY;
+//     AWS.config.region = "us-east-1";
+
+//     // Connect to the AWS DynamoDB database
+//     var dynamodb = new AWS.DynamoDB();
+    
+//     // DynamoDB (NoSQL) query
+//     var params = {
+//         TableName: "aarondiary",
+//         KeyConditionExpression: "#tp = :topicName", // the query expression
+//         ExpressionAttributeNames: { // name substitution, used for reserved words in DynamoDB
+//             "#tp": "topic"
+//         },
+//         ExpressionAttributeValues: { // the query values
+//             ":topicName": { S: "cats" }
+//         }
+//     };
+
+//     dynamodb.query(params, function(err, data) {
+//         if (err) {
+//             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+//         }
+//         else {
+//             res.send(data.Items);
+//             console.log('3) responded to request for dear diary data');
+//         }
+//     });
+// });
+
+// respond to requests for /deardiary
+app.get('/dd', function(req, res) {
+
+    // Connect to the AWS DynamoDB database
+    AWS.config = new AWS.Config();
+    //var dynamodb = new AWS.DynamoDB();
+    AWS.config.accessKeyId = process.env.AWS_ID;
+    AWS.config.secretAccessKey = process.env.AWS_KEY;
+    AWS.config.region = "us-east-1";
+
+    var dynamodb = new AWS.DynamoDB();
+
+    
+    // DynamoDB (NoSQL) query
+    var params2 = {
+        TableName: "deardiary",
+        KeyConditionExpression: "#dt = :entryDate", // the query expression
+        ExpressionAttributeNames: { // name substitution, used for reserved words in DynamoDB
+            "#dt": "pk"
+        },
+        ExpressionAttributeValues: { // the query values - set equal to today
+            ":entryDate": {S: "Thu Oct 11 2018"}
+        }
+    };
+
+   
+    dynamodb.query(params2, function(err, data) {
+        if (err) {
+            console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+        }
+        else {
+            var temp = cx + JSON.stringify(data.Items) + dx;
+            res.send(temp);
+            console.log(data.Items[0].pk.S);
+        }
+    });
+});
+
+
+// create ss templates
+var mx = `<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://d3js.org/d3.v3.min.js" language="JavaScript"></script>
+    <script src="js/liquidFillGauge.js" language="JavaScript"></script>
+    <style>
+        .liquidFillGaugeText { font-family: Helvetica; font-weight: bold; }
+        .meta {
+            text-align: center;
+            color: #3E8AC5;
+        }
+        .source {
+            display: absolute;
+            top: 5px;
+        }
+    </style>
+</head>
+<body>
+<svg id="fillgauge1" width="97%" height="250" onclick="gauge1.update(NewValue());"></svg>
+<script language="JavaScript">
+var data = 
+`;
+
+var nx = `;
+    var currentRead = data[0].ounces;
+    var newRead = currentRead;
+    var config1 = liquidFillGaugeDefaultSettings();
+    config1.waveAnimateTime = 2000;
+    var gauge1 = loadLiquidFillGauge("fillgauge1", Math.round(currentRead/64 * 100), config1);
+
+    function NewValue(){
+        newRead = 65;
+        console.log("new" + newRead);
+        console.log("current" + currentRead);
+        if(newRead > currentRead && newRead < 64){
+            return Math.round(newRead/64 * 100);
+        } else if(newRead >= 64) {
+            document.querySelectorAll('.meta').forEach(function(a){
+                a.remove()
+                })
+            var div = document.createElement('div');
+            div.className = 'meta';
+            div.innerHTML = '<h2>Congrats you reached your daily goal!</h2>';
+            document.getElementsByTagName('body')[0].appendChild(div); 
+            return Math.round(newRead/64 * 100);
+        } else {
+            return Math.round(currentRead/64 * 100);
+        }
+    }
+        var div = document.createElement('div');
+        div.className = 'meta';
+        div.innerHTML = '<h2>' + data[0].ounces + 'oz water consumed of 64oz daily goal' + '</h2>';
+        document.getElementsByTagName('body')[0].appendChild(div); 
+
+</script>
+<div class="source"><a href="http://bl.ocks.org/brattonc/5e5ce9beee483220e2f6">d3 source</a></div>
+</body>
+</html>`;
+//end ss template
+
+// create dd templates
+var cx = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AA Meetings</title>
+  <meta name="description" content="Meetings of AA in Manhattan">
+  <meta name="author" content="AA">
+  <link rel="stylesheet" type="text/css" href="css/styles.css"/>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
+   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+   crossorigin=""/>
+
+</head>
+<body>
+<script>
+var data = 
+`;
+
+var dx = `;
+
+var div = document.createElement('div');
+div.innerHTML = data[0].pk.S;
+
+document.getElementsByTagName('body')[0].appendChild(div);        
+
+
+</script>
+</body>
+</html>`;
+//end dd template
+
+
+// create AA templates
 var hx = `<!doctype html>
 <html lang="en">
 <head>
