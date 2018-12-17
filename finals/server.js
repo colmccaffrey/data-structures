@@ -45,145 +45,146 @@ app.get('/sensor', function(req, res) {
     });
 });
 
-var s1x = `<!DOCTYPE html>
-<meta charset="utf-8">
-<!-- Adapted from: http://bl.ocks.org/Caged/6476579 -->
+// var s1x = `<!DOCTYPE html>
+// <meta charset="utf-8">
+// <!-- Adapted from: http://bl.ocks.org/Caged/6476579 -->
 
-<style>
+// <style>
 
-body {
-  font: 10px sans-serif;
-}
+// body {
+//   font: 10px sans-serif;
+// }
 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
+// .axis path,
+// .axis line {
+//   fill: none;
+//   stroke: #000;
+//   shape-rendering: crispEdges;
+// }
 
-.bar {
-  fill: orange;
-}
+// .bar {
+//   fill: orange;
+// }
 
-.bar:hover {
-  fill: orangered ;
-}
+// .bar:hover {
+//   fill: orangered ;
+// }
 
-.x.axis path {
-  display: none;
-}
+// .x.axis path {
+//   display: none;
+// }
 
-.d3-tip {
-  line-height: 1;
-  font-weight: bold;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  border-radius: 2px;
-}
+// .d3-tip {
+//   line-height: 1;
+//   font-weight: bold;
+//   padding: 12px;
+//   background: rgba(0, 0, 0, 0.8);
+//   color: #fff;
+//   border-radius: 2px;
+// }
 
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-  box-sizing: border-box;
-  display: inline;
-  font-size: 10px;
-  width: 100%;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.8);
-  position: absolute;
-  text-align: center;
-}
+// /* Creates a small triangle extender for the tooltip */
+// .d3-tip:after {
+//   box-sizing: border-box;
+//   display: inline;
+//   font-size: 10px;
+//   width: 100%;
+//   line-height: 1;
+//   color: rgba(0, 0, 0, 0.8);
+//   position: absolute;
+//   text-align: center;
+// }
 
-/* Style northward tooltips differently */
-.d3-tip.n:after {
-  margin: -1px 0 0 0;
-  top: 100%;
-  left: 0;
-}
-</style>
-<body>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-<script>
+// /* Style northward tooltips differently */
+// .d3-tip.n:after {
+//   margin: -1px 0 0 0;
+//   top: 100%;
+//   left: 0;
+// }
+// </style>
+// <body>
+// <script src="http://d3js.org/d3.v3.min.js"></script>
+// <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+// <script>
 
-var data = `;
+// var data = `;
 
-var s2x = `; 
+// var s2x = `; 
 
-var margin = {top: 40, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+// var margin = {top: 40, right: 20, bottom: 30, left: 40},
+//     width = 960 - margin.left - margin.right,
+//     height = 500 - margin.top - margin.bottom;
 
-var formatPercent = d3.format(".0%");
+// var formatPercent = d3.format(".0%");
 
-var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+// var x = d3.scale.ordinal()
+//     .rangeRoundBands([0, width], .1);
 
-var y = d3.scale.linear()
-    .range([height, 0]);
+// var y = d3.scale.linear()
+//     .range([height, 0]);
 
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
+// var xAxis = d3.svg.axis()
+//     .scale(x)
+//     .orient("bottom");
 
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .tickFormat(formatPercent);
+// var yAxis = d3.svg.axis()
+//     .scale(y)
+//     .orient("left")
+//     .tickFormat(formatPercent);
 
-var tip = d3.tip()
-  .attr('class', 'd3-tip')
-  .offset([-10, 0])
-  .html(function(d) {
-    return "<strong>Percentage:</strong> <span style='color:red'>" + formatPercent(d.num_obs) + "</span>";
-  })
+// var tip = d3.tip()
+//   .attr('class', 'd3-tip')
+//   .offset([-10, 0])
+//   .html(function(d) {
+//     return "<strong>Percentage:</strong> <span style='color:red'>" + formatPercent(d.num_obs) + "</span>";
+//   })
 
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+// var svg = d3.select("body").append("svg")
+//     .attr("width", width + margin.left + margin.right)
+//     .attr("height", height + margin.top + margin.bottom)
+//   .append("g")
+//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-svg.call(tip);
+// svg.call(tip);
 
-  x.domain(data.map(function(d) { return d.sensorday; }));
-  y.domain([0, d3.max(data, function(d) { return d.num_obs; })]);
+//   x.domain(data.map(function(d) { return d.sensorday; }));
+//   y.domain([0, d3.max(data, function(d) { return d.num_obs; })]);
 
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+//   svg.append("g")
+//       .attr("class", "x axis")
+//       .attr("transform", "translate(0," + height + ")")
+//       .call(xAxis);
 
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Percentage");
+//   svg.append("g")
+//       .attr("class", "y axis")
+//       .call(yAxis)
+//     .append("text")
+//       .attr("transform", "rotate(-90)")
+//       .attr("y", 6)
+//       .attr("dy", ".71em")
+//       .style("text-anchor", "end")
+//       .text("Percentage");
 
-  svg.selectAll(".bar")
-      .data(data)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.sensorday); })
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.num_obs); })
-      .attr("height", function(d) { return height - y(d.num_obs); })
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide)
+//   svg.selectAll(".bar")
+//       .data(data)
+//     .enter().append("rect")
+//       .attr("class", "bar")
+//       .attr("x", function(d) { return x(d.sensorday); })
+//       .attr("width", x.rangeBand())
+//       .attr("y", function(d) { return y(d.num_obs); })
+//       .attr("height", function(d) { return height - y(d.num_obs); })
+//       .on('mouseover', tip.show)
+//       .on('mouseout', tip.hide)
 
-</script>`;
+// </script>`;
 
 app.get('/ss', function(req, res) {
     
     // Connect to the AWS RDS Postgres database
     const client = new Pool(db_credentials);
-    var d = new Date();
-    var today = parseInt(d.getDate());
+    // var d = new Date();
+    // var today = parseInt(d.getDate());
+
 
     // SQL query 
     var q = `SELECT EXTRACT(DAY FROM sensorTime) as sensorday,
@@ -231,6 +232,9 @@ app.get('/aameetings', function(req, res) {
 
 // respond to requests for /deardiary
 app.get('/deardiary', function(req, res) {
+    //var day =  getDate("Tue Oct 09 2018");
+   
+
 
     // Connect to the AWS DynamoDB database
     AWS.config = new AWS.Config();
@@ -241,20 +245,28 @@ app.get('/deardiary', function(req, res) {
 
     var dynamodb = new AWS.DynamoDB();
 
-    
+    var newDate = new Date();
+    var d = new Date();
+    var today = JSON.stringify(d.getDate());
+    console.log(today);
+    console.log(typeof(today));
     // DynamoDB (NoSQL) query
     var params = {
-        TableName: "deardiary",
+        TableName: "deardiary", 
         KeyConditionExpression: "#dt = :entryDate", // the query expression
+       // KeyConditionExpression: "#dt BETWEEN :startDay AND :endDay", // the query expression
+
         ExpressionAttributeNames: { // name substitution, used for reserved words in DynamoDB
-            "#dt": "pk"
+            "#dt": "pk",
         },
         ExpressionAttributeValues: { // the query values
-            ":entryDate": {S: "Thu Oct 11 2018"}
+            ":entryDate" : {S: "Tue Oct 09 2018"}
+            // ":startDay": {S: "Tue Oct 09 2018"},
+            // ":endDay": {S: "Thu Oct 11 2018"}
+
         }
     };
-
-    
+        
     dynamodb.query(params, function(err, data) {
         if (err) {
             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
@@ -266,42 +278,8 @@ app.get('/deardiary', function(req, res) {
     });
 });
 
-// // respond to requests for /deardiary
-// app.get('/deardiary', function(req, res) {
-    
-//     // AWS DynamoDB credentials
-//     AWS.config = new AWS.Config();
-//     AWS.config.accessKeyId = process.env.AWS_ID;
-//     AWS.config.secretAccessKey = process.env.AWS_KEY;
-//     AWS.config.region = "us-east-1";
 
-//     // Connect to the AWS DynamoDB database
-//     var dynamodb = new AWS.DynamoDB();
-    
-//     // DynamoDB (NoSQL) query
-//     var params = {
-//         TableName: "aarondiary",
-//         KeyConditionExpression: "#tp = :topicName", // the query expression
-//         ExpressionAttributeNames: { // name substitution, used for reserved words in DynamoDB
-//             "#tp": "topic"
-//         },
-//         ExpressionAttributeValues: { // the query values
-//             ":topicName": { S: "cats" }
-//         }
-//     };
-
-//     dynamodb.query(params, function(err, data) {
-//         if (err) {
-//             console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-//         }
-//         else {
-//             res.send(data.Items);
-//             console.log('3) responded to request for dear diary data');
-//         }
-//     });
-// });
-
-// respond to requests for /deardiary
+// respond to requests for /dd
 app.get('/dd', function(req, res) {
 
     // Connect to the AWS DynamoDB database
@@ -311,9 +289,9 @@ app.get('/dd', function(req, res) {
     AWS.config.secretAccessKey = process.env.AWS_KEY;
     AWS.config.region = "us-east-1";
 
+
     var dynamodb = new AWS.DynamoDB();
 
-    
     // DynamoDB (NoSQL) query
     var params2 = {
         TableName: "deardiary",
@@ -322,7 +300,7 @@ app.get('/dd', function(req, res) {
             "#dt": "pk"
         },
         ExpressionAttributeValues: { // the query values - set equal to today
-            ":entryDate": {S: "Thu Oct 11 2018"}
+            ":entryDate": {S: "Tue Oct 09 2018"}
         }
     };
 
@@ -354,10 +332,6 @@ var mx = `<!DOCTYPE html>
             text-align: center;
             color: #3E8AC5;
         }
-        .source {
-            display: absolute;
-            top: 5px;
-        }
     </style>
 </head>
 <body>
@@ -374,11 +348,18 @@ var nx = `;
     var gauge1 = loadLiquidFillGauge("fillgauge1", Math.round(currentRead/64 * 100), config1);
 
     function NewValue(){
-        newRead = 65;
+        newRead = data[8].ounces;
         console.log("new" + newRead);
         console.log("current" + currentRead);
         if(newRead > currentRead && newRead < 64){
-            return Math.round(newRead/64 * 100);
+            document.querySelectorAll('.meta').forEach(function(a){
+                a.remove()
+                })
+            var div = document.createElement('div');
+            div.className = 'meta';
+            div.innerHTML = '<h2>' + newRead + 'oz water consumed of 64oz daily goal' + '</h2>';
+            document.getElementsByTagName('body')[0].appendChild(div);
+            return Math.round(newRead/64 * 100); 
         } else if(newRead >= 64) {
             document.querySelectorAll('.meta').forEach(function(a){
                 a.remove()
@@ -394,11 +375,10 @@ var nx = `;
     }
         var div = document.createElement('div');
         div.className = 'meta';
-        div.innerHTML = '<h2>' + data[0].ounces + 'oz water consumed of 64oz daily goal' + '</h2>';
+        div.innerHTML = '<h2>' + currentRead + 'oz water consumed of 64oz daily goal' + '</h2>';
         document.getElementsByTagName('body')[0].appendChild(div); 
 
 </script>
-<div class="source"><a href="http://bl.ocks.org/brattonc/5e5ce9beee483220e2f6">d3 source</a></div>
 </body>
 </html>`;
 //end ss template
@@ -408,27 +388,168 @@ var cx = `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>AA Meetings</title>
-  <meta name="description" content="Meetings of AA in Manhattan">
-  <meta name="author" content="AA">
+  <title>Dear Diary</title>
+  <meta name="description" content="Daily Health Snapshot">
+  <meta name="author" content="DD">
   <link rel="stylesheet" type="text/css" href="css/styles.css"/>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"
-   integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-   crossorigin=""/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.9.1/d3.min.js" language="JavaScript"></script>
 
 </head>
 <body>
+<div class="heatmap"></div>
 <script>
-var data = 
+var newdata = 
 `;
 
 var dx = `;
+//get data from dd and set by day (the way the example has it by week)
+//add text with details to box or below
+//week = pos
+//day = day
+//value = data value
 
-var div = document.createElement('div');
-div.innerHTML = data[0].pk.S;
+var data = new Array();
+for (var i= 0; i < newdata.length; i++){
+    var info = new Array();
+    var infoSleep = getSleep(newdata[i].sleep.BOOL);
+    var infoEx = getEx(parseInt(newdata[i].fitness.M.details.M.duration.S));
+    var infoMot = getMot(newdata[i].fitness.M.motivation.S);
+    info.push(infoSleep, infoEx, infoMot);
 
-document.getElementsByTagName('body')[0].appendChild(div);        
+    for (var j = 0; j < info.length; j++){
+    var item = new Object();
+        item = {
+            pos: j + 1,
+            day: +newdata[i].day.S,
+            value: info[j]
+        }
+    data.push(item);
+    console.log("item" + item.value);
+}}
+
+function getSleep(sData) {
+    if (sData) {
+        return 7;
+    } else {
+        return 1;
+    }
+}
+
+function getEx(eData) {
+    var time = Math.round(eData/15) + 1;
+    return time;
+}
+
+function getMot(mData) {
+    console.log(mData);
+    if (mData === 'low') {
+        return 1;
+    } else if (mData === 'moderate') {
+        console.log('7');
+        return 4;
+    } else {
+        return 7;
+        }
+}
+
+console.log("data" + data[0].pos + data[0].day + data[0].value);
+
+var dataLabels = ["Sleep", "Exercise", "Motivation"];
+
+var colorDomain = d3.extent(data, function(d){
+    console.log("d " + d.value);
+        return d.value;
+});
+
+var colorScale = d3.scaleLinear()
+  .domain(colorDomain)
+  .range(["lightcyan","teal"]);
+
+var svg = d3.select(".heatmap")
+.append("svg")
+.attr("width", 500)
+.attr("height", 500);
+
+
+var rectangles = svg.selectAll("rect")
+  .data(data)
+  .enter()
+  .append("rect")
+ 
+
+rectangles
+.attr("x", function(d){
+  return d.day * 50 + 100; 
+})
+
+.attr("y", function(d){
+  return d.pos * 50; 
+})
+.attr("width", 200)
+.attr("height", 50). 
+style("fill", function(d){
+  return colorScale(d.value); 
+}); 
+
+
+var text = svg.selectAll("text")
+                    .data(dataLabels)
+                    .enter()
+                    .append("text");
+
+var textLabels = text
+                 .attr("x", function(d) { return 202; })
+                 .attr("y", function(d, i) { return i * 50 + 98; })
+                 .text( function (d) { return d; })
+                 .attr("font-family", "sans-serif")
+                 .attr("font-size", "14px")
+                 .attr("fill", "black");
+
+var detailsDay = svg.selectAll("text.date")
+        .data(newdata)
+        .enter()
+        .append("text")
+        .attr("class", "date")
+        .attr("font-size", "14px")
+        .attr("fill", "black")
+        .text( function(d) { return d.pk.S; })
+        .attr("x", function(d) { return 200 })
+        .attr("y", function(d) { return 20; });
+
+var detailsWe = svg.selectAll("text.weather")
+        .data(newdata)
+        .enter()
+        .append("text")
+        .attr("class", "weather")
+        .attr("font-size", "14px")
+        .attr("fill", "black")
+        .text( function(d) { return d.weather.M.condition.S + ', ' + d.weather.M.temperature.N + ' degrees';})
+        .attr("x", function(d) { return 200; })
+        .attr("y", function(d) { return 40; });
+
+var detailsEx = svg.selectAll("text.exercise")
+        .data(newdata)
+        .enter()
+        .append("text")
+        .attr("class", "exercise")
+        .attr("font-size", "14px")
+        .attr("fill", "black")
+        .text( function(d) { 
+            if (d.fitness.M.exercise.BOOL) {
+                var deets = d.fitness.M.details.M.duration.S + ' ' + d.fitness.M.details.M.type.S;
+            } else {
+                var deets = "No excerise";
+            }
+            return deets;
+        })
+        .attr("x", function(d) { return 200; })
+        .attr("y", function(d) { return 250; }); 
+
+// var div = document.createElement('div');
+// div.innerHTML = data[0].pk.S;
+
+// document.getElementsByTagName('body')[0].appendChild(div);        
 
 
 </script>
