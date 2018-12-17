@@ -1,4 +1,4 @@
-* [http://18.207.111.248:8080/](http://18.207.111.248:8080)
+[http://18.207.111.248:8080/](http://18.207.111.248:8080)
 
 ## Data Structures Final Assignment 1 ##
 ## AA Meetings ##
