@@ -25,13 +25,20 @@ app.get('/sensor', function(req, res) {
     // Connect to the AWS RDS Postgres database
     const client = new Pool(db_credentials);
 
+        //     select to_char(date,'Mon') as mon,
+        //     extract(year from date) as yyyy,
+        //     sum("Sales") as "Sales"
+        // from yourtable
+        // group by 1,2
+
     // SQL query 
-    var q = `SELECT EXTRACT(DAY FROM sensorTime) as sensorday,
+    var q = `SELECT to_char(sensorTime, 'Mon') as sensormonth,
+             EXTRACT(DAY FROM sensorTime) as sensorday,
              COUNT(sensorValue::int) as ounces
              FROM sensorData
              WHERE sensorValue >= 4
-             GROUP BY sensorday
-             ORDER BY sensorday;`;
+             GROUP BY 1,2
+             ORDER BY 1,2;`;
     
 
     client.connect();
@@ -341,14 +348,26 @@ var data =
 `;
 
 var nx = `;
-    var currentRead = data[0].ounces;
+    var dd = new Date();
+    var d = new Date();
+    var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var month = months[dd.getMonth()];
+    var today = dd.getDate();
+    var i;
+    data.forEach(function (day,index){
+        if (day.sensorday === today) {
+            i = index;
+        } 
+    })    
+    var currentRead = data[i].ounces;
     var newRead = currentRead;
     var config1 = liquidFillGaugeDefaultSettings();
     config1.waveAnimateTime = 2000;
     var gauge1 = loadLiquidFillGauge("fillgauge1", Math.round(currentRead/64 * 100), config1);
 
     function NewValue(){
-        newRead = data[8].ounces;
+        console.log(month, today);
+        newRead = data[i].ounces;
         console.log("new" + newRead);
         console.log("current" + currentRead);
         if(newRead > currentRead && newRead < 64){
@@ -357,7 +376,7 @@ var nx = `;
                 })
             var div = document.createElement('div');
             div.className = 'meta';
-            div.innerHTML = '<h2>' + newRead + 'oz water consumed of 64oz daily goal' + '</h2>';
+            div.innerHTML = '<h3>' + month + ' ' + today + '<br/>' + '<h2>' + newRead + 'oz water consumed' + '</br>' + 'of 64oz daily goal' + '</h2>';
             document.getElementsByTagName('body')[0].appendChild(div);
             return Math.round(newRead/64 * 100); 
         } else if(newRead >= 64) {
@@ -375,7 +394,7 @@ var nx = `;
     }
         var div = document.createElement('div');
         div.className = 'meta';
-        div.innerHTML = '<h2>' + currentRead + 'oz water consumed of 64oz daily goal' + '</h2>';
+        div.innerHTML = '<h2>' + month + ' ' + today + '<br/>' + currentRead + 'oz water consumed' + '</br>' + 'of 64oz daily goal' + '</h2>';
         document.getElementsByTagName('body')[0].appendChild(div); 
 
 </script>

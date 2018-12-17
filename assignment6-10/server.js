@@ -56,13 +56,13 @@ app.get('/aameetings', function(req, res) {
     const client = new Pool(db_credentials);
     
       // SQL query for all the locations, grouped by lat/long to plot marker on map only one for each location
-      var thisQuery1 = `SELECT long, lat FROM aalocations GROUP BY long, lat;`;
+      var thisQuery1 = `SELECT lat, long FROM aalocations GROUP BY lat, long;`;
 
       //query when a user select a specific marker, pass the long/lat coordinates and get all primary meeting info such as addresses, times, days and types at that location.  Could also do a sort by current time
-      var thisQuery2 = `SELECT address, day, hour, min, type FROM aalocations WHERE lat = 40.7346341 and long = -73.9879773;`;
+      //var thisQuery2 = `SELECT address, day, hour, min, type FROM aalocations WHERE lat = 40.7346341 and long = -73.9879773;`;
       
       //additional query for an individual meeting for secondary detailed information like secondary address info and special interests, depending onuser selection
-      var thisQuery3 = `SELECT add2, details, access FROM aalocations WHERE type = 'B = Beginners meeting';`;
+      //var thisQuery3 = `SELECT add2, details, access FROM aalocations WHERE type = 'B = Beginners meeting';`;
       //var thisQuery = `SELECT * FROM aalocations;`;
       //var thisQuery = "SELECT mtgday, mtgtime, mtglocation, mtgaddress, mtgtypes FROM aadata WHERE mtgday = 'Monday' and mtghour >= 7;";
       //var thisQuery3 = `SELECT address, day, hour, min, FROM aalocations WHERE address = '49 Fulton Street';`;
