@@ -214,13 +214,29 @@ app.get('/ss', function(req, res) {
 
 // respond to requests for /aameetings
 app.get('/aameetings', function(req, res) {
-    
+    var chour = 3;
+    // var d = new Date();
+    // var dayOfWeek = ['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays']
+    // var theday = dayOfWeek[d.getDay()];
+    // console.log(theday);
     // Connect to the AWS RDS Postgres database
     const client = new Pool(db_credentials);
-    
-    // SQL query 
-    var thisQuery1 = `SELECT lat, long, COUNT(address), address FROM aalocations GROUP BY lat, long, address;`;
+        var d = new Date();
+        var dayOfWeek = ['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays']
+        var theday = dayOfWeek[d.getDay()];
+        console.log(theday);
 
+    // WITH myconstants (cday) as (
+    //     values (theday)
+    // )
+
+    // SQL query 
+    var thisQuery1 = `SELECT lat, long, COUNT(address), address, json_agg(json_build_object('add2', add2, 'loc', location, 'name', name, 'details', details, 'access', access, 'day', day, 'hr', hour, 'min', min, 'ampm', amPM, 'day', day, 'type', type, 'special', special)) as meetings
+                        FROM aalocations
+                        WHERE day = 'Mondays' and amPM = 'PM' and hour in ('7', '8', '9', '10', '11')
+                        GROUP BY lat, long, address
+                        ORDER BY lat, long
+                        ;`;
     // var thisQuery = `SELECT mtgaddress, mtglocation as location, json_agg(json_build_object('day', mtgday, 'time', mtgtime)) as meetings
     //              FROM aadata 
     //              WHERE mtgday = 'Tuesday' and mtghour >= 19 
@@ -659,19 +675,7 @@ var jx = `;
             document.querySelectorAll('.details').forEach(function(a){
                 a.remove()
                 })
-                    //var iDiv = document.createElement('div');
-                    // iDiv.id = 'block';
-                    // iDiv.className = 'block';
-
-                    // // Create the inner div before appending to the body
-                    // var innerDiv = document.createElement('div');
-                    // innerDiv.className = 'block-2';
-
-                    // // The variable iDiv is still good... Just append to it.
-                    // iDiv.appendChild(innerDiv);
-
-                    // // Then append the whole thing onto the body
-                    // document.getElementsByTagName('body')[0].appendChild(iDiv);
+              
             var info = document.createElement('div');
             info.className = 'details';
             
@@ -689,38 +693,19 @@ var jx = `;
         var meetingArray = new Array();
         var deets = "";
         for (var i = 0; i < meetData.length; i++) {
-            deets = meetData[i].name + '<br/>' + '<strong>' + meetData[i].day + '</strong>' + ' at ' + meetData[i].hr + ':' + meetData[i].min + ' ' + meetData[i].ampm + '<br/>';
+            if (meetData[i].details === 'NA') {
+                meetData[i].details = '';
+            } if (meetData[i].special === 'NA') {
+                meetData[i].special = 'No special interests.';
+            } if (meetData[i].access === 'NA') {
+                meetData[i].access = 'Not wheelchair accessible';
+            }
+            deets = '<strong>' + meetData[i].day + ' at ' + meetData[i].hr + ':' + meetData[i].min + ' ' + meetData[i].ampm + '</strong><br/>' + meetData[i].name + '<br/>' + meetData[i].type + '<br/><p><strong>Details:</strong><br/>' +  meetData[i].add2 + '<br/>' + meetData[i].access + '<br/>' + meetData[i].details + '<br/>Special Interest: ' + meetData[i].special + '</p><hr>';
             meetingArray.push(deets);
         }
         return meetingArray;
     }
 
-
-    //   marker.on('click', function(e) {
-    //     var tile = document.createElement('div');
-    //     tile.innerHTML = "new dom";
-    //     tile.style.outline = '1px solid red';
-    //       console.log("marker clicked!");
-    //     //marker.createData(e);
-
-    //   });
-
-   // }
-
-    // function createData(e) {
-    // var tile = document.createElement('div');
-    // tile.innerHTML = "new dom";
-    // tile.style.outline = '1px solid red';
-    // return tile;
-    // }
-
-    // });
-
-    //use this function to trigger marker click from element other than marker, ie button
-      
-    //   document.querySelector('button').addEventListener('click', function() {
-    //     marker.fire('click');
-    //   });
 
     </script>
     </body>
@@ -740,9 +725,11 @@ app.get('/aa', function(req, res) {
 
 
     // SQL query 
-    var thisQuery = `SELECT lat, long, COUNT(address), address, json_agg(json_build_object('add2', add2, 'loc', location, 'name', name, 'details', details, 'access', access, 'day', day, 'hr', hour, 'min', min, 'ampm', amPM, 'day', day, 'type', type, 'special', special)) as meetings
-                    FROM aalocations 
+    var thisQuery = `SELECT lat, long, COUNT(address), address, json_agg(json_build_object('add2', add2, 'name', name, 'details', details, 'access', access, 'day', day, 'hr', hour, 'min', min, 'ampm', amPM, 'day', day, 'type', type, 'special', special)) as meetings
+                    FROM aalocations
+                    WHERE day = 'Mondays' and amPM = 'PM' and hour in ('7', '8', '9', '10', '11')
                     GROUP BY lat, long, address
+                    ORDER BY lat, long
                     ;`;
 
     // var thisQuery = `SELECT lat, lon, json_agg(json_build_object('loc', mtglocation, 'address', mtgaddress, 'time', tim, 'name', mtgname, 'day', day, 'types', types, 'shour', shour)) as meetings
