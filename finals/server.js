@@ -216,7 +216,7 @@ var mx = `<!DOCTYPE html>
     </style>
 </head>
 <body>
-//create svg 
+<!--create svg-->
 <svg id="fillgauge1" width="97%" height="250" onclick="gauge1.update(NewValue());"></svg>
 <script language="JavaScript">
 var data = 
