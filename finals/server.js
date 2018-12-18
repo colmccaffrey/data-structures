@@ -543,6 +543,8 @@ var mymap = L.map('mapid', {
         var meetingArray = new Array();
         var deets = "";
         for (var i = 0; i < meetData.length; i++) {
+
+            //sets default values for missing data or undefined values
             if (meetData[i].details === 'NA') {
                 meetData[i].details = '';
             } if (meetData[i].special === 'NA') {
