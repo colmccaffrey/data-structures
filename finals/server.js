@@ -19,19 +19,16 @@ AWS.config.accessKeyId = process.env.AWS_ID;
 AWS.config.secretAccessKey = process.env.AWS_KEY;
 AWS.config.region = "us-east-1";
 
-// respond to requests for /sensor
+// sensor endpoint
 app.get('/sensor', function(req, res) {
     
     // Connect to the AWS RDS Postgres database
     const client = new Pool(db_credentials);
 
-        //     select to_char(date,'Mon') as mon,
-        //     extract(year from date) as yyyy,
-        //     sum("Sales") as "Sales"
-        // from yourtable
-        // group by 1,2
 
     // SQL query 
+    // select the month from sensortime and the day, count the sensor value for all values over 4 and
+    // return as ounces, from table sensorData and group by  month and day
     var q = `SELECT to_char(sensorTime, 'Mon') as sensormonth,
              EXTRACT(DAY FROM sensorTime) as sensorday,
              COUNT(sensorValue::int) as ounces
@@ -52,139 +49,9 @@ app.get('/sensor', function(req, res) {
     });
 });
 
-// var s1x = `<!DOCTYPE html>
-// <meta charset="utf-8">
-// <!-- Adapted from: http://bl.ocks.org/Caged/6476579 -->
+//end sensor endpoint query
 
-// <style>
-
-// body {
-//   font: 10px sans-serif;
-// }
-
-// .axis path,
-// .axis line {
-//   fill: none;
-//   stroke: #000;
-//   shape-rendering: crispEdges;
-// }
-
-// .bar {
-//   fill: orange;
-// }
-
-// .bar:hover {
-//   fill: orangered ;
-// }
-
-// .x.axis path {
-//   display: none;
-// }
-
-// .d3-tip {
-//   line-height: 1;
-//   font-weight: bold;
-//   padding: 12px;
-//   background: rgba(0, 0, 0, 0.8);
-//   color: #fff;
-//   border-radius: 2px;
-// }
-
-// /* Creates a small triangle extender for the tooltip */
-// .d3-tip:after {
-//   box-sizing: border-box;
-//   display: inline;
-//   font-size: 10px;
-//   width: 100%;
-//   line-height: 1;
-//   color: rgba(0, 0, 0, 0.8);
-//   position: absolute;
-//   text-align: center;
-// }
-
-// /* Style northward tooltips differently */
-// .d3-tip.n:after {
-//   margin: -1px 0 0 0;
-//   top: 100%;
-//   left: 0;
-// }
-// </style>
-// <body>
-// <script src="http://d3js.org/d3.v3.min.js"></script>
-// <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-// <script>
-
-// var data = `;
-
-// var s2x = `; 
-
-// var margin = {top: 40, right: 20, bottom: 30, left: 40},
-//     width = 960 - margin.left - margin.right,
-//     height = 500 - margin.top - margin.bottom;
-
-// var formatPercent = d3.format(".0%");
-
-// var x = d3.scale.ordinal()
-//     .rangeRoundBands([0, width], .1);
-
-// var y = d3.scale.linear()
-//     .range([height, 0]);
-
-// var xAxis = d3.svg.axis()
-//     .scale(x)
-//     .orient("bottom");
-
-// var yAxis = d3.svg.axis()
-//     .scale(y)
-//     .orient("left")
-//     .tickFormat(formatPercent);
-
-// var tip = d3.tip()
-//   .attr('class', 'd3-tip')
-//   .offset([-10, 0])
-//   .html(function(d) {
-//     return "<strong>Percentage:</strong> <span style='color:red'>" + formatPercent(d.num_obs) + "</span>";
-//   })
-
-// var svg = d3.select("body").append("svg")
-//     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.top + margin.bottom)
-//   .append("g")
-//     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-// svg.call(tip);
-
-//   x.domain(data.map(function(d) { return d.sensorday; }));
-//   y.domain([0, d3.max(data, function(d) { return d.num_obs; })]);
-
-//   svg.append("g")
-//       .attr("class", "x axis")
-//       .attr("transform", "translate(0," + height + ")")
-//       .call(xAxis);
-
-//   svg.append("g")
-//       .attr("class", "y axis")
-//       .call(yAxis)
-//     .append("text")
-//       .attr("transform", "rotate(-90)")
-//       .attr("y", 6)
-//       .attr("dy", ".71em")
-//       .style("text-anchor", "end")
-//       .text("Percentage");
-
-//   svg.selectAll(".bar")
-//       .data(data)
-//     .enter().append("rect")
-//       .attr("class", "bar")
-//       .attr("x", function(d) { return x(d.sensorday); })
-//       .attr("width", x.rangeBand())
-//       .attr("y", function(d) { return y(d.num_obs); })
-//       .attr("height", function(d) { return height - y(d.num_obs); })
-//       .on('mouseover', tip.show)
-//       .on('mouseout', tip.hide)
-
-// </script>`;
-
+// sensor query for ss template
 app.get('/ss', function(req, res) {
     
     // Connect to the AWS RDS Postgres database
@@ -212,37 +79,26 @@ app.get('/ss', function(req, res) {
     });
 });
 
-// respond to requests for /aameetings
+// sql query for /aameetings endpoint
 app.get('/aameetings', function(req, res) {
-    var chour = 3;
-    // var d = new Date();
-    // var dayOfWeek = ['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays']
-    // var theday = dayOfWeek[d.getDay()];
-    // console.log(theday);
-    // Connect to the AWS RDS Postgres database
+    //var chour = 3;
     const client = new Pool(db_credentials);
+    //function get day string name from getDate()
         var d = new Date();
         var dayOfWeek = ['Sundays', 'Mondays', 'Tuesdays', 'Wednesdays', 'Thursdays', 'Fridays', 'Saturdays']
         var theday = dayOfWeek[d.getDay()];
         console.log(theday);
 
-    // WITH myconstants (cday) as (
-    //     values (theday)
-    // )
-
+  
     // SQL query 
+    //selects aa locations and sorts them by long/lat where day equals Monday and time is > 7pm and < 12am
     var thisQuery1 = `SELECT lat, long, COUNT(address), address, json_agg(json_build_object('add2', add2, 'loc', location, 'name', name, 'details', details, 'access', access, 'day', day, 'hr', hour, 'min', min, 'ampm', amPM, 'day', day, 'type', type, 'special', special)) as meetings
                         FROM aalocations
                         WHERE day = 'Mondays' and amPM = 'PM' and hour in ('7', '8', '9', '10', '11')
                         GROUP BY lat, long, address
                         ORDER BY lat, long
                         ;`;
-    // var thisQuery = `SELECT mtgaddress, mtglocation as location, json_agg(json_build_object('day', mtgday, 'time', mtgtime)) as meetings
-    //              FROM aadata 
-    //              WHERE mtgday = 'Tuesday' and mtghour >= 19 
-    //              GROUP BY mtgaddress, mtglocation
-    //              ;`;
-
+  
     client.query(thisQuery1, (qerr, qres) => {
         if (qerr) { throw qerr }
         else {
@@ -252,12 +108,10 @@ app.get('/aameetings', function(req, res) {
         }
     });
 });
+//end sql query for aa meeting endpoint
 
-// respond to requests for /deardiary
+// dynamo query for dear diary endpoint
 app.get('/deardiary', function(req, res) {
-    //var day =  getDate("Tue Oct 09 2018");
-   
-
 
     // Connect to the AWS DynamoDB database
     AWS.config = new AWS.Config();
@@ -277,11 +131,13 @@ app.get('/deardiary', function(req, res) {
     var params = {
         TableName: "deardiary", 
         KeyConditionExpression: "#dt = :entryDate", // the query expression
-       // KeyConditionExpression: "#dt BETWEEN :startDay AND :endDay", // the query expression
 
+        //primary key expression attribute name
         ExpressionAttributeNames: { // name substitution, used for reserved words in DynamoDB
             "#dt": "pk",
         },
+
+        //query results for specific date, could also query for a range
         ExpressionAttributeValues: { // the query values
             ":entryDate" : {S: "Tue Oct 09 2018"}
             // ":startDay": {S: "Tue Oct 09 2018"},
@@ -302,7 +158,7 @@ app.get('/deardiary', function(req, res) {
 });
 
 
-// respond to requests for /dd
+// dear dear sql query for /dd interface
 app.get('/dd', function(req, res) {
 
     // Connect to the AWS DynamoDB database
@@ -319,9 +175,11 @@ app.get('/dd', function(req, res) {
     var params2 = {
         TableName: "deardiary",
         KeyConditionExpression: "#dt = :entryDate", // the query expression
+        //primary key expression attribute name
         ExpressionAttributeNames: { // name substitution, used for reserved words in DynamoDB
             "#dt": "pk"
         },
+        //query results for specific date, could also query for a range
         ExpressionAttributeValues: { // the query values - set equal to today
             ":entryDate": {S: "Tue Oct 09 2018"}
         }
@@ -358,12 +216,15 @@ var mx = `<!DOCTYPE html>
     </style>
 </head>
 <body>
+//create svg 
 <svg id="fillgauge1" width="97%" height="250" onclick="gauge1.update(NewValue());"></svg>
 <script language="JavaScript">
 var data = 
 `;
 
 var nx = `;
+
+//function to get the current day and month
     var dd = new Date();
     var d = new Date();
     var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -374,12 +235,24 @@ var nx = `;
         if (day.sensorday === today) {
             i = index;
         } 
-    })    
+    }) 
+    
+    //set query result to current, so svg onclick can let user get updated value
     var currentRead = data[i].ounces;
+
+    //set new read to current read to compare values on click updates
     var newRead = currentRead;
+
+    //set default and custom d3 settings
     var config1 = liquidFillGaugeDefaultSettings();
     config1.waveAnimateTime = 2000;
+
+    //set the value of the guage svg to the current read divided by the daily goal of water consumption 
+    //(recommended 64 ounces) * 100 so it returns as percent of daily goal
     var gauge1 = loadLiquidFillGauge("fillgauge1", Math.round(currentRead/64 * 100), config1);
+
+    //function that updates the value on click to get latest sensor data, updates visualization with new values
+    // also creates div with value and meta data and text depending on water consumption amount in ounces
 
     function NewValue(){
         console.log(month, today);
@@ -438,20 +311,19 @@ var newdata =
 `;
 
 var dx = `;
-//get data from dd and set by day (the way the example has it by week)
-//add text with details to box or below
-//week = pos
-//day = day
-//value = data value
 
+//create an empty array to push queried data into once reconfigured for visualization mapping
 var data = new Array();
 for (var i= 0; i < newdata.length; i++){
     var info = new Array();
+
+    //functions for each value we want to map to visualization
     var infoSleep = getSleep(newdata[i].sleep.BOOL);
     var infoEx = getEx(parseInt(newdata[i].fitness.M.details.M.duration.S));
     var infoMot = getMot(newdata[i].fitness.M.motivation.S);
     info.push(infoSleep, infoEx, infoMot);
 
+    //gets reults of each function as array and creates a new object for each
     for (var j = 0; j < info.length; j++){
     var item = new Object();
         item = {
@@ -463,6 +335,7 @@ for (var i= 0; i < newdata.length; i++){
     console.log("item" + item.value);
 }}
 
+//function to reformat sleep data
 function getSleep(sData) {
     if (sData) {
         return 7;
@@ -471,11 +344,13 @@ function getSleep(sData) {
     }
 }
 
+//function to reformat exercise data
 function getEx(eData) {
     var time = Math.round(eData/15) + 1;
     return time;
 }
 
+//function to reformat motivation
 function getMot(mData) {
     console.log(mData);
     if (mData === 'low') {
@@ -492,6 +367,7 @@ console.log("data" + data[0].pos + data[0].day + data[0].value);
 
 var dataLabels = ["Sleep", "Exercise", "Motivation"];
 
+//set d3 configuration based on returned values and set color domain range
 var colorDomain = d3.extent(data, function(d){
     console.log("d " + d.value);
         return d.value;
@@ -501,12 +377,13 @@ var colorScale = d3.scaleLinear()
   .domain(colorDomain)
   .range(["lightcyan","teal"]);
 
+//append svg to div with class heatmap
 var svg = d3.select(".heatmap")
 .append("svg")
 .attr("width", 500)
 .attr("height", 500);
 
-
+//create rectangles and set attributes
 var rectangles = svg.selectAll("rect")
   .data(data)
   .enter()
@@ -527,7 +404,8 @@ style("fill", function(d){
   return colorScale(d.value); 
 }); 
 
-
+//append text for each rectangles, append date and title, and more detailed information
+//append all infromation to svg
 var text = svg.selectAll("text")
                     .data(dataLabels)
                     .enter()
@@ -581,10 +459,6 @@ var detailsEx = svg.selectAll("text.exercise")
         .attr("x", function(d) { return 200; })
         .attr("y", function(d) { return 250; }); 
 
-// var div = document.createElement('div');
-// div.innerHTML = data[0].pk.S;
-
-// document.getElementsByTagName('body')[0].appendChild(div);        
 
 
 </script>
@@ -619,57 +493,31 @@ var hx = `<!doctype html>
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
       accessToken: 'pk.eyJ1Ijoidm9ucmFtc3kiLCJhIjoiY2pveGF0aDV2MjIyOTNsbWxlb2hhMmR4dCJ9.JJdYD_jWgRwUeJkDWiBz3w'
     });
-    //  streets = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-    //      id: 'mapbox.streets', 
-    //      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    //      accessToken: 'pk.eyJ1Ijoidm9ucmFtc3kiLCJhIjoiY2pveGF0aDV2MjIyOTNsbWxlb2hhMmR4dCJ9.JJdYD_jWgRwUeJkDWiBz3w'
-
-    //     });
   var data = 
   `;
   
 var jx = `;
-    //var mymap = L.map('mapid').setView([39.734636,-100.994997], 13);
-    var mymap = L.map('mapid', {
+
+//setup leaflet map 
+var mymap = L.map('mapid', {
         center: [40.734636,-73.959997],
         maxZoom: 18,
-        zoom: 12.5,
+        zoom: 11.5,
         layers: [grayscale],
         accessToken: 'pk.eyJ1Ijoidm9ucmFtc3kiLCJhIjoiY2pveGF0aDV2MjIyOTNsbWxlb2hhMmR4dCJ9.JJdYD_jWgRwUeJkDWiBz3w'
     });
 
-    // for (var i=0; i<data.length; i++) {
-    //     L.marker( [data[i].lat, data[i].long] ).bindPopup(JSON.stringify(data[i].address)).addTo(mymap);
-    // }
 
-    // var circle = L.circle([data[i].lat, data[i].long], {
-    //     color: 'blue',
-    //     properties: {
-    //             text: 122,            
-    //         textColor: 'white',
-    //     },
-    //     fillOpacity: 0.5,
-    //     radius: 10 * data[i].count
-    // }).addTo(mymap);
-
+    //for each record create marker at long/long and load tooltip with address and count for number of meetings grouped at that long/lat
     for (var i=0; i<data.length; i++) {
         var marker = new L.marker([data[i].lat, data[i].long], { opacity: 1 }).addTo(mymap).on('click', markerOnClick); //opacity may be set to zero
         marker.address = data[i].address;
         marker.meetings = data[i].meetings;
         marker.bindTooltip(data[i].address + '<br />' + data[i].count + ' Meetings', {
             permanent: false, className: "my-label", offset: [0, 0] });
-        //marker.on('click', markerOnClick).addTo(mymap);  
         
-        //     var marker = new L.marker([13.0102, 80.2157]).addTo(mymap).on('mouseover', onClick);
-        //     marker.key = "marker-1";
-
-        //     var marker2 =new  L.marker([13.0101, 80.2157]).addTo(mymap).on('mouseover', onClick);
-        //     marker2.key = "marker-2";
-
-        //     function onClick(e) {   
-        //     alert(this.key); // i can expect my keys here
-        // }
-
+        //function that renders a sidebar div with address of long lat and all meetings at that long lat
+        //with data for each meetings on click for each marker
         function markerOnClick(e){
             
             document.querySelectorAll('.details').forEach(function(a){
@@ -689,6 +537,8 @@ var jx = `;
             document.getElementsByTagName('body')[0].appendChild(info);        
         }
     }
+
+    //function that gets meeting details for specific marker long/lat only
     function getMeetings(meetData){
         var meetingArray = new Array();
         var deets = "";
@@ -710,20 +560,18 @@ var jx = `;
     </script>
     </body>
     </html>`;
+//end aa template
 
-// respond to requests for /aameetings
+// AA meetings sql query endpoint /aameetings
 app.get('/aa', function(req, res) {
 
-    // var now = moment.tz(Date.now(), "America/New_York"); 
-    // var dayy = now.day().toString(); 
-    // var hourr = now.hour().toString(); 
 
     // Connect to the AWS RDS Postgres database
     const client = new Pool(db_credentials);
 
     //var thisQuery = "CREATE TABLE aalocations (address varchar(200), lat double precision, long double precision, add2 varchar(200), location varchar(200), name varchar(200), details varchar(200), access varchar(100), day varchar (100), hour varchar (100), min varchar (100), amPm varchar (100), type varchar (200), special varchar (200) );";
 
-
+    //select records from aalocations table grouped by long/lat where day is Monday and startime is >=7pm and < 12am
     // SQL query 
     var thisQuery = `SELECT lat, long, COUNT(address), address, json_agg(json_build_object('add2', add2, 'name', name, 'details', details, 'access', access, 'day', day, 'hr', hour, 'min', min, 'ampm', amPM, 'day', day, 'type', type, 'special', special)) as meetings
                     FROM aalocations
@@ -732,11 +580,6 @@ app.get('/aa', function(req, res) {
                     ORDER BY lat, long
                     ;`;
 
-    // var thisQuery = `SELECT lat, lon, json_agg(json_build_object('loc', mtglocation, 'address', mtgaddress, 'time', tim, 'name', mtgname, 'day', day, 'types', types, 'shour', shour)) as meetings
-    //              FROM aadatall 
-    //              WHERE day = ` + dayy + `and shour >= ` + hourr 
-    //              GROUP BY lat, lon
-    //              ;`;
 
     client.query(thisQuery, (qerr, qres) => {
         if (qerr) { throw qerr }
